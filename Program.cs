@@ -152,7 +152,10 @@ logger.Info("Program started");
             Console.WriteLine($"Post Content: {post.Content}");
             Console.WriteLine();
         }
+  
+  
     }
+logger.Info("Program ended");
 
 
 // try
@@ -182,6 +185,6 @@ logger.Info("Program started");
 //     logger.Error(ex.Message);
 // }
 
-logger.Info("Program ended");
+
 
 
