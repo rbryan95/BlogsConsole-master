@@ -1,5 +1,11 @@
 ﻿﻿using NLog;
 using System.Linq;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using System.IO;
+using System.Collections.Generic;
 
 // See https://aka.ms/new-console-template for more information
 string path = Directory.GetCurrentDirectory() + "\\nlog.config";
