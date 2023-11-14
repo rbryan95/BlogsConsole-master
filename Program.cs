@@ -14,6 +14,56 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 logger.Info("Program started");
 
+//user input 
+ var db = new BloggingContext();
+
+        while (true)
+        {
+            Console.WriteLine("Menu:");
+            Console.WriteLine("1. Display all blogs");
+            Console.WriteLine("2. Add a blog");
+            Console.WriteLine("3. Create a post");
+            Console.WriteLine("4. Display posts for a selected blog");
+            Console.WriteLine("5. Exit");
+
+            Console.Write("Enter your choice: ");
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    DisplayAllBlogs(db);
+                    break;
+
+                case 2:
+                    AddBlog(db);
+                    break;
+
+                case 3:
+                    CreatePost(db);
+                    break;
+
+                case 4:
+                    DisplayPostsForSelectedBlog(db);
+                    break;
+
+                case 5:
+                    logger.Info("Program ended");
+                    return;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
+    }
+
+
 try
 {
 
