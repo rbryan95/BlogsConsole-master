@@ -61,35 +61,126 @@ logger.Info("Program started");
                     break;
             }
         }
-    }
-
-
-try
-{
-
-    // Create and save a new Blog
-    Console.Write("Enter a name for a new Blog: ");
-    var name = Console.ReadLine();
-
-    var blog = new Blog { Name = name };
-
-    var db = new BloggingContext();
-    db.AddBlog(blog);
-    logger.Info("Blog added - {name}", name);
-
-    // Display all Blogs from the database
-    var query = db.Blogs.OrderBy(b => b.Name);
-
-    Console.WriteLine("All blogs in the database:");
-    foreach (var item in query)
+    
+//adisplay blogs blogs 
+    static void DisplayAllBlogs(BloggingContext db)
     {
-        Console.WriteLine(item.Name);
+        var query = db.Blogs.OrderBy(b => b.Name);
+
+        Console.WriteLine("All blogs in the database:");
+        foreach (var item in query)
+        {
+            Console.WriteLine(item.Name);
+        }
     }
-}
-catch (Exception ex) 
-{
-    logger.Error(ex.Message);
-}
+
+
+//adding blogs
+    static void AddBlog(BloggingContext db)
+    {
+        Console.Write("Enter a name for a new Blog: ");
+        var name = Console.ReadLine();
+
+        var blog = new Blog { Name = name };
+
+        db.AddBlog(blog);
+        Console.WriteLine("Blog added - {0}", name);
+    }
+
+
+//create a post 
+    static void CreatePost(BloggingContext db)
+    {
+        try
+        {
+            Console.WriteLine("Select the Blog you want to post to:");
+            var blogName = Console.ReadLine();
+
+            var selectedBlog = db.Blogs.FirstOrDefault(b => b.Name == blogName);
+
+            if (selectedBlog == null)
+            {
+                Console.WriteLine("Blog not found. Please add the blog first or check the blog name.");
+                return;
+            }
+
+            Console.Write("Enter the Post title: ");
+            var postTitle = Console.ReadLine();
+
+            Console.Write("Enter the Post content: ");
+            var postContent = Console.ReadLine();
+
+            var post = new Post
+            {
+                Title = postTitle,
+                Content = postContent,
+                BlogId = selectedBlog.BlogId
+            };
+
+            db.Posts.Add(post);
+            db.SaveChanges();
+            Console.WriteLine("Post added to Blog - {0} - Title: {1}", blogName, postTitle);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+
+//display posts for selected blog
+    static void DisplayPostsForSelectedBlog(BloggingContext db)
+    {
+        Console.WriteLine("Select the Blog to view its posts:");
+        var blogName = Console.ReadLine();
+
+        var selectedBlog = db.Blogs.FirstOrDefault(b => b.Name == blogName);
+
+        if (selectedBlog == null)
+        {
+            Console.WriteLine("Blog not found. Please select an existing blog.");
+            return;
+        }
+
+        var posts = db.Posts.Where(p => p.BlogId == selectedBlog.BlogId).ToList();
+
+        Console.WriteLine($"Posts for '{selectedBlog.Name}' (Total: {posts.Count} Posts):");
+        foreach (var post in posts)
+        {
+            Console.WriteLine($"Blog Name: {selectedBlog.Name}");
+            Console.WriteLine($"Post Title: {post.Title}");
+            Console.WriteLine($"Post Content: {post.Content}");
+            Console.WriteLine();
+        }
+    }
+
+
+// try
+// {
+
+//     // Create and save a new Blog
+//     Console.Write("Enter a name for a new Blog: ");
+//     var name = Console.ReadLine();
+
+//     var blog = new Blog { Name = name };
+
+//     var db = new BloggingContext();
+//     db.AddBlog(blog);
+//     logger.Info("Blog added - {name}", name);
+
+//     // Display all Blogs from the database
+//     var query = db.Blogs.OrderBy(b => b.Name);
+
+//     Console.WriteLine("All blogs in the database:");
+//     foreach (var item in query)
+//     {
+//         Console.WriteLine(item.Name);
+//     }
+// }
+// catch (Exception ex) 
+// {
+//     logger.Error(ex.Message);
+// }
 
 logger.Info("Program ended");
 
